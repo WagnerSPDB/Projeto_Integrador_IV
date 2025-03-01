@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import '../styles/Upload.scss';
 import uploadicon from '../assets/upload.png';
+import { db, collection, addDoc, getDocs } from '../data/firebase';
 
 function Upload() {
   const [image, setImage] = useState(null);
@@ -12,7 +13,6 @@ function Upload() {
 
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-  // Função para traduzir o resultado da análise
   const getAnalysisMessage = (result) => {
     switch (result) {
       case 0:
@@ -28,7 +28,6 @@ function Upload() {
     const file = event.target.files[0];
     if (!file) return;
 
-    // Verificar se o arquivo excede o tamanho permitido
     if (file.size > MAX_FILE_SIZE) {
       setError('O arquivo deve ter no máximo 5MB');
       return;
@@ -37,14 +36,12 @@ function Upload() {
     setLoading(true);
     setError(null);
 
-    // Exibir a imagem localmente antes do upload
     const reader = new FileReader();
     reader.onloadend = () => {
       setImage(reader.result);
     };
     reader.readAsDataURL(file);
 
-    // Criar FormData para envio
     const formData = new FormData();
     formData.append('file', file);
 
@@ -59,18 +56,19 @@ function Upload() {
       }
 
       const data = await response.json();
-      console.log(data);  // Verifique o conteúdo da resposta
+      console.log(data);
       setAnalysisResult(data.resultado);
 
-      // Adicionar ao histórico
-      setHistory(prevHistory => [
-        {
-          name: file.name,
-          uploadDate: new Date().toLocaleDateString(),
-          status: getAnalysisMessage(data.resultado),
-        },
-        ...prevHistory
-      ]);
+      const historyEntry = {
+        name: file.name,
+        uploadDate: new Date().toLocaleDateString(),
+        status: getAnalysisMessage(data.resultado),
+      };
+
+      setHistory(prevHistory => [historyEntry, ...prevHistory]);
+
+      const docRef = await addDoc(collection(db, 'uploads'), historyEntry);
+      console.log('Documento salvo com ID:', docRef.id);
     } catch (error) {
       setError('Falha ao enviar a imagem. Tente novamente.');
       console.error('Erro ao enviar imagem:', error);
@@ -78,6 +76,23 @@ function Upload() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'uploads'));
+        const historyData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setHistory(historyData);
+      } catch (error) {
+        console.error('Erro ao buscar histórico:', error);
+      }
+    };
+
+    fetchHistory();
+  }, []);
 
   const triggerFileInput = () => {
     document.getElementById('file-input').click();
@@ -105,28 +120,28 @@ function Upload() {
         </form>
       </div>
 
-      <div className='uploaded-container'>
-        <div className='uploaded-container-white'>
-          <div className='uploaded-container-img'>
-            {image ? (
-              <img src={image} alt="Uploaded" className='uploaded-container-img' />
-            ) : (
-              <img
-                className='uploaded-container-img'
-                src='https://thumbs.dreamstime.com/b/nenhum-elemento-gr%C3%A1fico-de-miniatura-fotografia-nenhuma-imagem-encontrada-ou-dispon%C3%ADvel-na-galeria-s%C3%ADmbolo-espa%C3%A7o-reservado-324671543.jpg'
-                alt="Placeholder"
-              />
-            )}
-          </div>
-          <div className='uploaded-container-text'>
-            <p className='text-title'>Análise da imagem</p>
-            <p className='text-infor'>
-              Erro detectado: {analysisResult !== null ? getAnalysisMessage(analysisResult) : 'Aguardando análise...'}
-            </p>
-            {error && <p className='error-message'>{error}</p>}
-          </div>
+      <div className={`uploaded-container ${analysisResult === 0 ? 'success' : analysisResult === 1 ? 'error' : 'default'}`}>
+      <div className='uploaded-container-white'>
+        <div className='uploaded-container-img'>
+          {image ? (
+            <img src={image} alt="Uploaded" className='uploaded-container-img' />
+          ) : (
+            <img
+              className='uploaded-container-img'
+              src='https://thumbs.dreamstime.com/b/nenhum-elemento-gr%C3%A1fico-de-miniatura-fotografia-nenhuma-imagem-encontrada-ou-dispon%C3%ADvel-na-galeria-s%C3%ADmbolo-espa%C3%A7o-reservado-324671543.jpg'
+              alt="Placeholder"
+            />
+          )}
+        </div>
+        <div className='uploaded-container-text'>
+          <p className='text-title'>Análise da imagem</p>
+          <p className='text-infor'>
+            Resultado: {analysisResult !== null ? getAnalysisMessage(analysisResult) : 'Aguardando análise...'}
+          </p>
+          {error && <p className='error-message'>{error}</p>}
         </div>
       </div>
+    </div>
 
       <hr className='barra' />
 

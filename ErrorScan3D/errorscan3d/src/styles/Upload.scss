@@ -54,14 +54,28 @@
     }
 
     .uploaded-container {
-        background-color: colors.$warning;
         display: flex;
         height: 230px;
         max-width: 1000px;
         margin: auto;
         margin-bottom: 50px;
         border-radius: 20px;
-        border: 1px solid colors.$warning;
+        border: 1px solid colors.$terciary;
+        background-color: colors.$terciary;
+      
+        &.success {
+          background-color: rgb(90, 179, 90);
+          border: 1px solid rgb(90, 179, 90);
+        }
+      
+        &.error {
+          background-color: colors.$warning;
+          border: 1px solid colors.$warning;
+        }
+
+        .uploaded-container.default {
+            background-color: rgb(192, 192, 192); // ou qualquer outra cor padrão
+        }
 
         .uploaded-container-white {
             background-color: white;
