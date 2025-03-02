@@ -2,7 +2,7 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import Home from './pages/Home';
 import './App.css';
 import Upload from './pages/Upload';
-import Projects from './pages/Projects';
+import Sobre from './pages/Sobre';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home/>}/> 
         <Route path='/upload' element={<Upload/>}/>
-        <Route path='/projects' element={<Projects/>}/>
+        <Route path='/sobrenós' element={<Sobre/>}/>
       </Routes>
     </BrowserRouter>
   );

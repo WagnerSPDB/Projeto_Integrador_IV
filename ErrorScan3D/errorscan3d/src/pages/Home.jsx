@@ -9,7 +9,6 @@ import circle from '../assets/circle1.png'
 function Home() {
   return (
     <div className='home-fundo' >
-
       <NavBar />
       <div className='home'>
         <div className='home-container1'>

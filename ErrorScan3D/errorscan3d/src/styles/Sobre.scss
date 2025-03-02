@@ -1,0 +1,151 @@
+@use 'colors';
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.container {
+    background: linear-gradient(to right, colors.$primary1, colors.$primary2);
+    padding-top: 3vh;
+    height: auto;
+    font-family: 'Kanit', sans-serif;
+    position: relative;
+    min-height: 100vh; 
+}
+
+.navbar {
+    position: relative;
+    z-index: 1; 
+}
+
+.about-image {
+    position: absolute; 
+    top: -10px;
+    left: 20px;
+    z-index: 0; 
+
+    img {
+        max-width: 310px; 
+        border-radius: 10px;
+    }
+}
+
+.about-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative; 
+    margin-left: 325px; 
+    margin-top: 20px; 
+
+    h1 {
+        font-size: 1.8rem;
+        margin: 0 auto; 
+        padding: 0.8rem 0; 
+        text-align: center;
+        color: #333;
+        font-weight: bold;
+        width: fit-content; 
+        position: relative; 
+        top: 0px; 
+        margin-left: 10px; 
+        border-bottom: 2px solid #000;
+    }
+      
+    p {
+        font-size: 1.2rem;
+        line-height: 1.5;
+        color: #ffffff; 
+        margin-top: 1rem; 
+        text-align: justify; 
+        background: rgba(255, 255, 255, 0.2); 
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        border: 2px solid #fff; 
+        border-radius: 15px; 
+        max-width: 1000px; 
+        z-index: 2; 
+    }
+}
+
+.team-section {
+    position: relative; 
+    height: 80vh; 
+    width: 100%; 
+  
+    .team-member {
+      position: absolute; 
+      width: 220px; 
+      height: 120px; 
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 1rem; 
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid #fff; 
+      transition: transform 0.3s ease;
+  
+      &:hover {
+        transform: scale(1.1); 
+      }
+  
+     
+      &:nth-child(1) {
+        top: 10%; 
+        left: 20%;
+      }
+      &:nth-child(2) {
+        top: 10%;
+        right: 20%;
+      }
+      &:nth-child(3) {
+        top: 40%; 
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      &:nth-child(4) {
+        bottom: 10%; 
+        
+        left: 20%;
+      }
+      &:nth-child(5) {
+        bottom: 10%; 
+        right: 20%;
+      }
+  
+      .member-info {
+        h3 {
+          font-size: 1.2rem; 
+          color: #333;
+          margin-bottom: 0.5rem;
+          text-align: center;
+        }
+  
+        p {
+          font-size: 1rem; 
+          color: #555;
+          text-align: center;
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .team-member {
+      flex-direction: column;
+      text-align: center;
+      padding: 1rem; 
+      max-width: 100%; 
+  
+      .member-info {
+        text-align: center;
+  
+        h3 {
+          font-size: 1rem; 
+        }
+  
+        p {
+          font-size: 0.8rem; 
+        }
+      }
+    }
+  }
+  
+  
